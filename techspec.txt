@@ -1,4 +1,4 @@
-$Id: techspec.txt,v 1.2 2000/04/05 19:02:49 jacob Exp $
+$Id: techspec.txt,v 1.1.1.1 2003/10/10 20:13:33 jacob Exp $
 
 Apache::AuthCookieDBI Technical Specification
 

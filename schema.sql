@@ -1,4 +1,4 @@
-# $Id: schema.sql,v 1.1 2000/06/21 21:45:36 jacob Exp $
+# $Id: schema.sql,v 1.1.1.1 2003/10/10 20:13:33 jacob Exp $
 #
 # Schema for creating the database tables for an authentication system.
 

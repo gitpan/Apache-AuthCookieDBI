@@ -1,4 +1,4 @@
-$Id: generic_reg_auth_scheme.txt,v 1.2 2000/06/21 22:37:32 jacob Exp $
+$Id: generic_reg_auth_scheme.txt,v 1.1.1.1 2003/10/10 20:13:33 jacob Exp $
 30 March 2000
 matisse
 
