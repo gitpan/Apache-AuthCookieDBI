@@ -4,9 +4,9 @@
 #
 # An AuthCookie module backed by a DBI database.
 #
-# Copyright (C) 1999 SF Interactive, Inc.  All rights reserved.
+# Copyright (C) 2002 SF Interactive.
 #
-# Author:  Jacob Davies <jacob@sfinteractive.com> <jacob@well.com>
+# Author:  Jacob Davies <jacob@well.com>
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,8 +22,6 @@
 # License along with this library; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: AuthCookieDBI.pm,v 1.18 2000/07/11 18:48:47 jacob Exp $
-#
 #===============================================================================
 
 package Apache::AuthCookieDBI;
@@ -31,7 +29,7 @@ package Apache::AuthCookieDBI;
 use strict;
 use 5.004;
 use vars qw( $VERSION );
-( $VERSION ) = '$Revision: 1.18 $' =~ /([\d.]+)/;
+( $VERSION ) = '$Revision: 1.19 $' =~ /([\d.]+)/;
 
 use Apache::AuthCookie;
 use vars qw( @ISA );
@@ -103,11 +101,15 @@ Apache::AuthCookieDBI - An AuthCookie module backed by a DBI database.
 
 =head1 VERSION
 
-	$Revision: 1.18 $
+	$Revision: 1.19 $
 
 =head1 SYNOPSIS
 
 	# In httpd.conf or .htaccess
+	# This PerlSetVar MUST precede the PerlModule line because the
+	# key is read in a BEGIN block when the module is loaded.
+	PerlSetVar WhatEverDBI_SecretKeyFile /etc/httpd/acme.com.key
+
 	PerlModule Apache::AuthCookieDBI
 	PerlSetVar WhatEverPath /
 	PerlSetVar WhatEverLoginScript /login.pl
@@ -117,7 +119,6 @@ Apache::AuthCookieDBI - An AuthCookie module backed by a DBI database.
 	
 	# These must be set
 	PerlSetVar WhatEverDBI_DSN "DBI:mysql:database=test"
-	PerlSetVar WhatEverDBI_SecretKeyFile /etc/httpd/acme.com.key
 
 	# These are optional, the module sets sensible defaults.
 	PerlSetVar WhatEverDBI_User "nobody"
@@ -358,10 +359,14 @@ and defaults to 'user'.
 
 The file that contains the secret key (on the first line of the file).  This
 is required and has no default value.  This key should be owned and only
-readable by root.  It is read at server startup time.
-The key should be long and fairly random.  If you want, you
-can change it and restart the server, (maybe daily), which will invalidate
-all prior-issued tickets.
+readable by root.  It is read at server startup time.  The key should be long
+and fairly random.  If you want, you can change it and restart the server,
+(maybe daily), which will invalidate all prior-issued tickets.
+
+This directive MUST be set before the PerlModule line that loads this module,
+because the secret key file is read immediately (at server start time).  This
+is so you can have it owned and only readable by root even though Apache
+then changes to another user.
 
 =cut
 
@@ -756,7 +761,7 @@ A minimal CREATE TABLE statement might look like:
 
 =head1 COPYRIGHT
 
-Copyright (C) 2000 SF Interactive, Inc.  All rights reserved.
+Copyright (C) 2002 SF Interactive.
 
 =head1 LICENSE
 
@@ -778,7 +783,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 Jacob Davies
 
-        <jacob@sfinteractive.com>
         <jacob@well.com>
 
 =head1 SEE ALSO
