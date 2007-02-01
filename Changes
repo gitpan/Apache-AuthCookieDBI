@@ -1,14 +1,11 @@
 Revision history for Perl extension Apache::AuthCookieDBI.
 
-2.02 - Tue Apr 12 17:58:40 PDT 2005
-       Minor documentation fix. Noted that SecretKeyFile has been
-       replaced by SecretKey.
-       
-
-2.0.1 - Fixed bug in  group()
-  It was expecting the list of groups to be already split up.
-
-2.0 - mod_perl 2 version
+1.24  Thu Feb  1 09:48:50 PST 2007
+  - Applied fixes for http://rt.cpan.org/Ticket/Display.html?id=3673
+  - use warnings pragma
+  - use base instead of modifying @ISA
+  - Changed 'return undef' to 'return'
+  - Added the primitive mocks to test.pl
 
 0.01  Mon Apr  3 10:50:32 2000
 	- original version; created by h2xs 1.19

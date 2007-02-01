@@ -1,6 +1,6 @@
 #!/usr/bin/perl -Tw
 #
-# $Id: login.pl,v 1.3 2003/10/10 22:33:31 jacob Exp $
+# $Id: login.pl,v 1.3.2.1 2007/02/01 18:29:21 matisse Exp $
 #
 # Display a login form with hidden fields corresponding to the page they
 # wanted to see.
@@ -8,10 +8,10 @@
 use strict;
 use 5.004;
 use Text::TagTemplate;
-use Apache;
+use Apache2::RequestRec;
 
 my $t = new Text::TagTemplate;
-my $r = Apache->request();
+my $r = Apache2::RequestRec->request();
 
 my $destination;
 my $authcookiereason;
