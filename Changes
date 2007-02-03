@@ -1,5 +1,9 @@
 Revision history for Perl extension Apache::AuthCookieDBI.
 
+2.10 Sat Feb  3 11:21:00 PST 2007
+  - Changed VERSION to 2.10 to get properly indexed by CPAN
+    No other changes.
+
 1.24  Thu Feb  1 09:48:50 PST 2007
   - Applied fixes for http://rt.cpan.org/Ticket/Display.html?id=3673
   - use warnings pragma

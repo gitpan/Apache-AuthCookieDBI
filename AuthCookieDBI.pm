@@ -1,6 +1,6 @@
 #===============================================================================
 #
-# $Id: AuthCookieDBI.pm,v 1.22.2.2 2007/02/01 18:29:21 matisse Exp $
+# $Id: AuthCookieDBI.pm,v 1.22.2.4 2007/02/03 19:22:24 matisse Exp $
 #
 # Apache::AuthCookieDBI
 #
@@ -37,7 +37,7 @@ use strict;
 use warnings;
 use 5.004_04;
 
-our $VERSION = 1.24;
+our $VERSION = 2.10;
 
 use Apache;
 use Apache::AuthCookie;
@@ -56,17 +56,6 @@ my $EMPTY_STRING = q{};
 # F U N C T I O N   D E C L A R A T I O N S
 #===============================================================================
 
-sub _log_not_set($$);
-sub _dir_config_var($$);
-sub _dbi_config_vars($);
-sub _now_year_month_day_hour_minute_second();
-sub _percent_encode($);
-sub _percent_decode($);
-
-sub extra_session_info($$\@);
-sub authen_cred($$\@);
-sub authen_ses_key($$$);
-sub group($$\@);
 
 #===============================================================================
 # P A C K A G E   G L O B A L S
@@ -118,7 +107,7 @@ Apache::AuthCookieDBI - An AuthCookie module backed by a DBI database.
 
 =head1 VERSION
 
-	$Revision: 1.22.2.2 $
+	$Revision: 1.22.2.4 $
 
 =head1 SYNOPSIS
 
@@ -226,10 +215,10 @@ and the login form is shown again.
 #-------------------------------------------------------------------------------
 # _log_not_set -- Log that a particular authentication variable was not set.
 
-sub _log_not_set($$) {
+sub _log_not_set {
     my ( $r, $variable ) = @_;
     my $auth_name = $r->auth_name;
-    $r->log_error(
+    return $r->log_error(
         "Apache::AuthCookieDBI: $variable not set for auth realm
 $auth_name", $r->uri
     );
@@ -238,7 +227,7 @@ $auth_name", $r->uri
 #-------------------------------------------------------------------------------
 # _dir_config_var -- Get a particular authentication variable.
 
-sub _dir_config_var($$) {
+sub _dir_config_var {
     my ( $r, $variable ) = @_;
     my $auth_name = $r->auth_name;
     return $r->dir_config("$auth_name$variable");
@@ -250,7 +239,7 @@ sub _dir_config_var($$) {
 # had errors or a hash of the values if they were all OK.  Takes a request
 # object.
 
-sub _dbi_config_vars($) {
+sub _dbi_config_vars {
     my ($r) = @_;
 
     my %c;    # config variables hash
@@ -458,7 +447,7 @@ This is not required and defaults to '00-24-00-00' or 24 hours.
 # _now_year_month_day_hour_minute_second -- Return a string with the time in
 # this order separated by dashes.
 
-sub _now_year_month_day_hour_minute_second() {
+sub _now_year_month_day_hour_minute_second {
     return sprintf '%04d-%02d-%02d-%02d-%02d-%02d', Today_and_Now;
 }
 
@@ -466,7 +455,7 @@ sub _now_year_month_day_hour_minute_second() {
 # _percent_encode -- Percent-encode (like URI encoding) any non-alphanumberics
 # in the supplied string.
 
-sub _percent_encode($) {
+sub _percent_encode {
     my ($str) = @_;
     $str =~ s/([^\w])/ uc sprintf '%%%02x', ord $1 /eg;
     return $str;
@@ -476,7 +465,7 @@ sub _percent_encode($) {
 # _percent_decode -- Percent-decode (like URI decoding) any %XX sequences in
 # the supplied string.
 
-sub _percent_decode($) {
+sub _percent_decode {
     my ($str) = @_;
     $str =~ s/%([0-9a-fA-F]{2})/ pack( "c",hex( $1 ) ) /ge;
     return $str;
@@ -505,7 +494,7 @@ The default implementation returns false.
 
 =cut
 
-sub extra_session_info ($$\@) {
+sub extra_session_info {
     my ( $self, $r, @credentials ) = @_;
 
     return;
@@ -516,7 +505,7 @@ sub extra_session_info ($$\@) {
 # a new session key for this user that can be stored in the cookie.
 # If there is a problem, return a bogus session key.
 
-sub authen_cred($$\@) {
+sub authen_cred {
     my ( $self, $r,        @credentials )       = @_;
     my ( $user, $password, @extra_credentials ) = @credentials;
     my $auth_name = $r->auth_name;
@@ -670,7 +659,7 @@ EOS
 #-------------------------------------------------------------------------------
 # Take a session key and check that it is still valid; if so, return the user.
 
-sub authen_ses_key($$$) {
+sub authen_ses_key {
     my ( $self, $r, $encrypted_session_key ) = @_;
 
     my $auth_name = $r->auth_name;
@@ -816,7 +805,7 @@ sub authen_ses_key($$$) {
 # Take a list of groups and make sure that the current remote user is a member
 # of one of them.
 
-sub group($$\@) {
+sub group {
     my ( $self, $r, @groups ) = @_;
 
     my $auth_name = $r->auth_name;
